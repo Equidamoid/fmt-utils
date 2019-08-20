@@ -1,16 +1,20 @@
 project(fmt-utils)
 cmake_minimum_required(VERSION 3.10)
 
-add_definitions('--std=c++17')
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS YES)
 
-#find_package(fmt REQUIRED)
-add_subdirectory(fmt)
+if (NOT TARGET fmt::fmt)
+    message("Using bundled fmtlib")
+    add_subdirectory(fmt)
+endif()
 
-add_executable(fmt-utils-test main.cpp)
-target_include_directories(fmt-utils-test
+add_executable(fmt-utils main.cpp)
+target_include_directories(fmt-utils
 PUBLIC
-include)
+    include
+)
 
-target_link_libraries(fmt-utils-test fmt::fmt)
+set_property(TARGET fmt-utils PROPERTY CXX_STANDARD 17)
+set_property(TARGET fmt-utils PROPERTY CXX_STANDARD_REQUIRED ON)
+
+target_link_libraries(fmt-utils fmt::fmt)
